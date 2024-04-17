@@ -1,5 +1,6 @@
 import os, random, traceback
 import config
+import asyncio
 
 from pyrogram import filters, Client
 from pyrogram.types import Message, ChatJoinRequest, InlineKeyboardButton, InlineKeyboardMarkup 
@@ -17,6 +18,23 @@ welcome=[
 ]
 
 #approve 
+#@app.on_chat_join_request()
+#async def approval(app: Client, m: ChatJoinRequest):
+#    usr = m.from_user
+#    cht = m.chat
+#    try:
+#        add_group(cht.id)
+#        await app.approve_chat_join_request(cht.id, usr.id)
+#        gif = random.choice(welcome)
+#        await app.send_animation(chat_id=usr.id, animation=gif, caption=f"Hey There {usr.first_name}\nWelcome To {cht.title}\n\n{usr.first_name} Your Request To Join {cht.title} Has Been Accepted By {app.me.first_name}")
+#        add_user(usr.id)
+#    except (UserIsBlocked, PeerIdInvalid):
+#        pass
+#    except Exception as err:
+#        print(str(err))   
+
+
+#approve 
 @app.on_chat_join_request()
 async def approval(app: Client, m: ChatJoinRequest):
     usr = m.from_user
@@ -27,10 +45,15 @@ async def approval(app: Client, m: ChatJoinRequest):
         gif = random.choice(welcome)
         await app.send_animation(chat_id=usr.id, animation=gif, caption=f"Hey There {usr.first_name}\nWelcome To {cht.title}\n\n{usr.first_name} Your Request To Join {cht.title} Has Been Accepted By {app.me.first_name}")
         add_user(usr.id)
+        
+        # Add a delay after each approval
+        await asyncio.sleep(10)  # Adjust the delay time as needed
+        
     except (UserIsBlocked, PeerIdInvalid):
         pass
     except Exception as err:
-        print(str(err))   
+        print(str(err))  
+        
 
 #pvtstart
 @app.on_message(filters.command("start") & filters.private)
