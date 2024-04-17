@@ -40,6 +40,8 @@ async def approval(app: Client, m: ChatJoinRequest):
     usr = m.from_user
     cht = m.chat
     try:
+        # Add a delay after each approval
+        await asyncio.sleep(10)  # Adjust the delay time as needed
         add_group(cht.id)
         await app.approve_chat_join_request(cht.id, usr.id)
         gif = random.choice(welcome)
