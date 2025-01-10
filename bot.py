@@ -23,7 +23,7 @@ welcome=[
     "https://telegra.ph/file/17a8ab5b8eeb0b898d575.mp4",
 ]
 
-def_delay = config.DELAY
+'''def_delay = config.DELAY
 
 async def create_approve_task(app: Client, j: ChatJoinRequest, after_delay: int):
     await asyncio.sleep(after_delay)
@@ -52,7 +52,23 @@ async def approval(app: Client, m: ChatJoinRequest):
     add_group(cht.id)
     add_user(usr.id)
 
-    asyncio.create_task(create_approve_task(app, m, Delay))
+    asyncio.create_task(create_approve_task(app, m, Delay))'''
+
+#approve 
+@app.on_chat_join_request()
+async def approval(app: Client, m: ChatJoinRequest):
+    usr = m.from_user
+    cht = m.chat
+    try:
+        add_group(cht.id)
+        await app.approve_chat_join_request(cht.id, usr.id)
+        gif = random.choice(welcome)
+        await app.send_animation(chat_id=usr.id, animation=gif, caption=f"Hey There {usr.first_name}\nWelcome To {cht.title}\n\n{usr.first_name} Your Request To Join {cht.title} Has Been Accepted By {app.me.first_name}")
+        add_user(usr.id)
+    except (UserIsBlocked, PeerIdInvalid):
+        pass
+    except Exception as err:
+        print(str(err))   
 
     
 
